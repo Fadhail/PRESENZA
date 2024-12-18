@@ -1,3 +1,18 @@
+<?php
+    include '../../../src/function/koneksi.php';
+
+    // Mengambil data mahasiswa dari database
+    $sql = $conn->prepare("SELECT id, npm, nama, kelas FROM mahasiswa");
+    $sql->execute();
+    $result = $sql->get_result();
+
+    // Cek apakah ada data yang ditemukan
+    if ($result->num_rows > 0) {
+        $dataMahasiswa = $result->fetch_all(MYSQLI_ASSOC);
+    } else {
+        $dataMahasiswa = [];
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +32,30 @@
     <!-- Content -->
     <div class="p-4 sm:ml-64">
     <h1 class="">Tabel Siswa</h1>
+    <!-- Table -->
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">id</th>
+                        <th scope="col" class="px-6 py-3">NPM</th>
+                        <th scope="col" class="px-6 py-3">NAMA</th>
+                        <th scope="col" class="px-6 py-3">KELAS</th>
+                        <th scope="col" class="px-6 py-3">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($dataMahasiswa as $mahasiswa): ?>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['id']); ?></td>
+                            <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['npm']); ?></td>
+                            <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['nama']); ?></td>
+                            <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['kelas']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 

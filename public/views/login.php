@@ -1,38 +1,86 @@
+<?php
+session_start();
+include '../../src/function/koneksi.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = md5($_POST['password']);
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+
+        if ($user['role'] == 'admin') {
+            header("Location: admin/dashboard.php");
+        } else {
+            header("Location: user/index.php");
+        }
+        exit();
+    } else {
+        $error = "Email atau password salah!";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRESENZA</title>
-    <link rel="stylesheet" href="./../../../src/css/output.css">
+    <title>Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900">
-    <!-- Navbar -->
-    <?php include "./../components/global/navbar.php"?>
 
-    <!-- Center  -->
-    <div class="flex items-center justify-center min-h-screen w-full">
-        <div class="w-full max-w-2xl p-8 m-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <form class="max-w-auto mx-auto">
-                <div class="mb-5">
-                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                    <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com" required />
+<body class="bg-gray-50 dark:bg-gray-900">
+  <?php include '../components/global/navbar.php'; ?>
+      <div class="min-h-screen flex flex-col items-center justify-center py-6 px-4">
+        <div class="max-w-md w-full">
+          <div class="p-8 rounded-2xl bg-white shadow">
+            <h2 class="text-gray-800 text-center text-2xl font-bold">Sign in</h2>
+            <form method="POST" action="login.php" class="mt-8 space-y-4">
+              <div>
+                <label class="text-gray-800 text-sm mb-2 block">Username</label>
+                <div class="relative flex items-center">
+                  <input name="username" type="username" id="username" required class="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Enter Username" />
                 </div>
-                <div class="mb-5">
-                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                    <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+              </div>
+
+              <div>
+                <label class="text-gray-800 text-sm mb-2 block">Password</label>
+                <div class="relative flex items-center">
+                  <input name="password" type="password" id="password"  required class="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Enter password" />
                 </div>
-                <div class="flex items-start mb-5">
-                    <div class="flex items-center h-5">
-                        <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
-                    </div>
-                    <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</label>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center">
+                  <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                  <label for="remember-me" class="ml-3 block text-sm text-gray-800">
+                    Remember me
+                  </label>
                 </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+              </div>
+
+              <div class="!mt-8">
+                <button type="submit" class="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+                  Sign in
+                </button>
+              </div>
+              <p class="text-gray-800 text-sm !mt-8 text-center">Belum punya akun? <a href="register_form.php" class="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold">Register di sini</a></p>
             </form>
+          </div>
         </div>
-    </div>
+      </div>
+
 </body>
+
 </html>
+
+

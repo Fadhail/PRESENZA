@@ -1,3 +1,12 @@
+<?php
+session_start();
+include '../../../src/function/koneksi.php';
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'mahasiswa') {
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +25,7 @@
 
     <!-- Content -->
     <div class="p-4 sm:ml-64">
-    <h1 class="">Dashboard</h1>
+    <h1 class="">Dashboard <?php echo $_SESSION['username'] ?> </h1>
     </div>
 </body>
 
