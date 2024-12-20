@@ -21,7 +21,7 @@ CREATE TABLE mahasiswa (
     nama VARCHAR(100) NOT NULL,
     kelas VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    descriptor TEXT NOT NULL,
+    descriptor TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -1,12 +1,11 @@
 <?php
     include '../../../src/function/koneksi.php';
 
-    // Mengambil data mahasiswa dari database
-    $sql = $conn->prepare("SELECT id, npm, nama, kelas FROM mahasiswa");
+    $sql = $koneksi->prepare("SELECT m.id, m.npm, m.nama, k.nama_kelas
+        FROM mahasiswa m 
+        INNER JOIN kelas k ON m.kelas_id = k.id");
     $sql->execute();
     $result = $sql->get_result();
-
-    // Cek apakah ada data yang ditemukan
     if ($result->num_rows > 0) {
         $dataMahasiswa = $result->fetch_all(MYSQLI_ASSOC);
     } else {
@@ -50,7 +49,7 @@
                             <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['id']); ?></td>
                             <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['npm']); ?></td>
                             <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['nama']); ?></td>
-                            <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['kelas']); ?></td>
+                            <td class="px-6 py-3"><?= htmlspecialchars($mahasiswa['nama_kelas']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -1,3 +1,9 @@
+<?php
+include '../../src/function/koneksi.php';
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,10 +44,20 @@
                     <input type="text" name="nama" id="nama" class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                 </div>
 
-                <div class="mb-4">
-                    <label for="kelas" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas</label>
-                    <input type="text" name="kelas" id="kelas" class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                </div>
+                <!-- Kelas Dropdown -->
+            <div class="mb-4">
+            <label for="kelas">Pilih Kelas:</label>
+    <select name="kelas" id="kelas">
+        <option value="" disabled selected>Pilih Kelas</option>
+        <?php
+        $query = "SELECT id, nama_kelas FROM kelas";
+        $result = $koneksi->query($query);
+        while ($row = $result->fetch_assoc()) {
+            echo "<option value='{$row['id']}'>{$row['nama_kelas']}</option>";
+        }
+        ?>
+    </select>
+            </div>
 
                 <button type="submit" class="w-full p-2 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Daftar</button>
                 <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
